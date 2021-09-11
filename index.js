@@ -235,4 +235,4 @@ client.on('message', message => {
 // });
 
 
-//client.initialize();
+client.initialize();

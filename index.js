@@ -1,4 +1,6 @@
 const qrcode = require('qrcode-terminal');
+var fetch =  require("node-fetch");
+
 
 
 
@@ -108,10 +110,10 @@ currency: `Getting FX Rates NGN/*......`,
     suggestion: `How do you think this services can be improve, 
 What would you want see added or removed`,
 
-    About:
+About:
 `Author: Umar Adamu
 Phone: +2347055793353
-Socials: https://twiiter.com/0mar_jay`
+Socials: https://twitter.com/0mar_jay`
 }
 // console.log(paths.Featured)
 var pathFinder = 'root'
@@ -151,10 +153,31 @@ client.on('message', message => {
         }else if(pathFinder== 'Featured') {
             switch(Number(message.body)) {
                 case 1:
-                    return	message.reply('Fetching today quotes')
+                    //daily quotes
+                    fetch("https://api.quotable.io/random").then(res => res.json())
+                    .then(data => {
+                        var msg = `${data.content}
+
+Author: ${data.author}`
+                        
+                    return	message.reply(msg)
+                    })
+                    
                   break;
                 case 2:
-                    return	message.reply('Fetching Hadith of Day')
+                    //daily hadiths
+                    fetch("https://api.sunnah.com/v1/hadiths/random", {
+                        method: 'GET',
+                        headers: {
+                            'X-API-KEY': 'SqD712P3E82xnwOAEOkGd5JZH8s9wRR24TqNFzjk',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                    }}).then(res => res.json())
+                    .then(data => {
+                       var text = data.hadith[0].body
+                       //text.replace(/[<br/><p><>]/g,'');
+                        return	message.reply(data.hadith[0].body) 
+                    })
                   break;
                 case 3:
                     return	message.reply('Launching Pocket Quran')
@@ -212,7 +235,14 @@ client.on('message', message => {
                     return	message.reply("Daily Quotes Hausa")
                   break;
                 case 2:
-                    return	message.reply("Daily Quotes English")
+                    fetch("https://api.quotable.io/random").then(res => res.json())
+                    .then(data => {
+                        var msg = `${data.content}
+
+Author: ${data.author}`
+                        
+                    return	message.reply(msg)
+                    })
                   break;       
                 default:
                     pathFinder= 'root'
@@ -233,6 +263,13 @@ client.on('message', message => {
 //     // Save the session object however you prefer.
 //     // Convert it to json, save it to a file, store it in a database...
 // });
+//Daily  Quotes 
+
+
+  
+
+
+
 
 
 client.initialize();

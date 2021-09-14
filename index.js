@@ -1,11 +1,14 @@
-const qrcode = require('qrcode-terminal');
+const {randomHadith} = require('./fetchers/hadith');
 var fetch =  require("node-fetch");
+var http = require('http');
 
+const {randomQuotes} = require('./fetchers/randomQuotes');
+//const {newsAudio} = require('./fetchers/newsAudio')
 
 
 
 const fs = require('fs');
-const {Client} = require('whatsapp-web.js');
+const {Client, MessageMedia} = require('whatsapp-web.js');
 
 
 // Path where the session data will be stored
@@ -153,31 +156,12 @@ client.on('message', message => {
         }else if(pathFinder== 'Featured') {
             switch(Number(message.body)) {
                 case 1:
-                    //daily quotes
-                    fetch("https://api.quotable.io/random").then(res => res.json())
-                    .then(data => {
-                        var msg = `${data.content}
-
-Author: ${data.author}`
-                        
-                    return	message.reply(msg)
-                    })
-                    
+                    //
+                return randomQuotes().then(msg => message.reply(msg) )       
+                	
                   break;
                 case 2:
-                    //daily hadiths
-                    fetch("https://api.sunnah.com/v1/hadiths/random", {
-                        method: 'GET',
-                        headers: {
-                            'X-API-KEY': 'SqD712P3E82xnwOAEOkGd5JZH8s9wRR24TqNFzjk',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                    }}).then(res => res.json())
-                    .then(data => {
-                       var text = data.hadith[0].body
-                       //text.replace(/[<br/><p><>]/g,'');
-                        return	message.reply(data.hadith[0].body) 
-                    })
+                    return	randomHadith().then(hadith => message.reply(hadith))  
                   break;
                 case 3:
                     return	message.reply('Launching Pocket Quran')
@@ -208,7 +192,8 @@ Author: ${data.author}`
                     return	message.reply('Hijira Calender')
                   break;
                 case 2:
-                    return	message.reply('Fetching Hadith of Day')
+
+                    return	randomHadith().then(hadith => message.reply(hadith))
                   break;  
                 case 3:
                     return	message.reply('Launching Pocket Quran')
@@ -223,7 +208,9 @@ Author: ${data.author}`
                     return	message.reply('Getting data from BBC hausa')
                   break;
                 case 2:
-                    return	message.reply('Getting data from BBC English')
+                    const media = MessageMedia.fromFilePath('./ff.mp3');
+                    message.reply('Fetching news from Voice of America.... Please wait...')
+                    return	message.reply(media)
                   break;       
                 default:
                     pathFinder= 'root'
@@ -235,14 +222,7 @@ Author: ${data.author}`
                     return	message.reply("Daily Quotes Hausa")
                   break;
                 case 2:
-                    fetch("https://api.quotable.io/random").then(res => res.json())
-                    .then(data => {
-                        var msg = `${data.content}
-
-Author: ${data.author}`
-                        
-                    return	message.reply(msg)
-                    })
+                return	message.reply(randomQuotes) 
                   break;       
                 default:
                     pathFinder= 'root'
@@ -268,8 +248,8 @@ Author: ${data.author}`
 
   
 
+//newsAudio()
 
 
 
-
-client.initialize();
+//client.initialize();

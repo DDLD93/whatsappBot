@@ -4,6 +4,7 @@ const {newsAudio} = require('./fetchers/newsAudio')
 const {hijiraCalender} = require('./fetchers/hijiraCalender')
 const {AllahNames} = require('./fetchers/namesALLAH')
 var fetch =  require("node-fetch");
+const qrcode = require('qrcode-terminal');
 var http = require('http');
 
 
@@ -16,7 +17,7 @@ const {Client, MessageMedia} = require('whatsapp-web.js');
 
 
 // Path where the session data will be stored
-const SESSION_FILE_PATH = './session.json';
+const SESSION_FILE_PATH = './07055793353.json';
 
 // Load the session data if it has been previously saved
 let sessionData;
@@ -25,13 +26,15 @@ if(fs.existsSync(SESSION_FILE_PATH)) {
     console.log('file session found')
 }
 
-// Use the saved values
+//Use the saved values
 const client = new Client({
     session: sessionData
 });
-// client.on('qr', qr => {
-//     qrcode.generate(qr, {small: true});
-// });
+
+
+
+
+
 client.on('ready', () => {
     console.log('Client is ready!');
 });

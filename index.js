@@ -2,6 +2,7 @@ const {randomHadith} = require('./fetchers/hadith');
 const {randomQuotes} = require('./fetchers/randomQuotes');
 const {newsAudio} = require('./fetchers/newsAudio')
 const {hijiraCalender} = require('./fetchers/hijiraCalender')
+const {AllahNames} = require('./fetchers/namesALLAH')
 var fetch =  require("node-fetch");
 var http = require('http');
 
@@ -91,7 +92,8 @@ Please select your desired options
 2.${menu[1][1][2][0]}
 3.${menu[1][1][3][0]}
 4.${menu[2][1][0]} - VOA hausa Audio
-5. Hijira Calender`,
+5. Hijira Calender
+6. Names of Allah`,
 // option 2 is selected from the main menu
     Religion: 
 `Religion:
@@ -101,6 +103,8 @@ Please select your desired options
 1.${menu[1][1][1][0]}
 2.${menu[1][1][2][0]}
 3.${menu[1][1][3][0]}`,
+
+        AllahNames: `Enter a number between 1 and 99`,
                     
     
     news: `News Laguage:
@@ -183,7 +187,7 @@ client.on('message', message => {
                     return	message.reply('Launching Pocket Quran')
                    break;
                 case 4:
-                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
+                    const media = MessageMedia.fromFilePath('./news/VOA_Hausa.mp3');
                     message.reply('Fetching news from Voice of America.... Please wait...')
                     return	message.reply(media)
                    break; 
@@ -191,7 +195,11 @@ client.on('message', message => {
                     return hijiraCalender().then(msg =>{
                         message.reply(msg)
                     })
-                   break;            
+                   break; 
+                case 6:
+                    pathFinder = 'Allah Names'
+                    return	message.reply(paths.AllahNames)
+                   break;              
                 default:
                     pathFinder= 'root'
                     return	message.reply(paths.root)
@@ -212,13 +220,9 @@ client.on('message', message => {
         }else if(pathFinder == 'Islam') {
             switch(Number(message.body)) {
                 case 1:
-                    hijiraCalender().then(msg =>{
-                        message.reply(msg)
-                    })
-                    
-                  break;
+                    return hijiraCalender().then(msg =>message.reply(msg))
+                break;
                 case 2:
-
                     return	randomHadith().then(hadith => message.reply(hadith))
                   break;  
                 case 3:
@@ -228,10 +232,20 @@ client.on('message', message => {
                     pathFinder= 'root'
                     return	message.reply(paths.root)
               }  
+        }else if (pathFinder == 'Allah Names') {
+            if (Number(message.body) > 99 || Number(message.body) < 1 ) {
+                message.reply(`Please enter a number between 1 - 99
+'Menu' to go back to Home
+'Exit' quit the app`)
+}else{
+    AllahNames(Number(message.body)).then(msg => message.reply(msg))
+}
+                
+            
         }else if(pathFinder == 'News') {
             switch(Number(message.body)) {
                 case 1:
-                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
+                    const media = MessageMedia.fromFilePath('./news/VOA_Hausa.mp3');
                     message.reply('Fetching news from Voice of America.... Please wait...')
                     return	message.reply(media)
                   break;
@@ -271,3 +285,4 @@ client.on('message', message => {
 // });
 //Daily  Quotes 
 client.initialize();
+// console.log(paths.AllahNames)

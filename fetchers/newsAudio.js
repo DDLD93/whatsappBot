@@ -6,21 +6,30 @@ function newsAudio() {
   // new Date object
 let date = new Date();
 let year = date.getFullYear()
-let day = 9
+let day = date.getDate()
 let month = date.getMonth()
 let hour = date.getHours()
-if(day <= 9) day = '0'+day
+if(day <= 9) {
+  day.toString()
+  day = '0'+day+''
+}
+if(month <= 9) {
+  month++
+  month.toString()
+  month = '0'+month+''
+}
+var link = `https://av.voanews.com/clips/VHA/${year}/${month}/${day}/${year}${month}${day}-050000-VHA066-program_48k.mp3`
+var linkG = 'https://av.voanews.com/clips/VHA/2021/09/13/20210913-203000-VHA066-program_48k.mp3'
+console.log(link)
+console.log(linkG)
 
-console.log(day)
 
   request
-  .get(`https://av.voanews.com/clips/VHA/${year}/${month++}/${day}${year}${month++}${day}-203000-VHA066-program_48k.mp3`)
+  .get(link)
   .on('error', function(err) {
-    // handle error
+    console.log(err)
   })
-  .pipe(fs.createWriteStream(`../news/${year}-${month++}-${day}.mp3`));
+  .pipe(fs.createWriteStream(`./news/voa.mp3`));
 }
 
-
-newsAudio()
 module.exports = {newsAudio}

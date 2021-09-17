@@ -1,8 +1,11 @@
 const {randomHadith} = require('./fetchers/hadith');
+const {randomQuotes} = require('./fetchers/randomQuotes');
+const {newsAudio} = require('./fetchers/newsAudio')
+const {hijiraCalender} = require('./fetchers/hijiraCalender')
 var fetch =  require("node-fetch");
 var http = require('http');
 
-const {randomQuotes} = require('./fetchers/randomQuotes');
+
 //const {newsAudio} = require('./fetchers/newsAudio')
 
 
@@ -44,7 +47,7 @@ client.on('ready', () => {
 // });
 
 const menu = [
-['Featured'],
+['Working Features'],
 ['Religion',
     ['islam',
         ['Hijira Calender',()=>console.log('hijira calender')],
@@ -73,20 +76,22 @@ const menu = [
 const paths = {
 //main menu    
     root:`Welcome to DDLD WhatsApp service
-Please select any of the options 1 - 7    
+Please select your desired options  
 1.${menu[0][0]}
 2.${menu[1][0]}
 3.${menu[2][0]}
 4.${menu[3][0]}
 5.${menu[4][0]}
 6.${menu[5][0]}
-7.${menu[6][0]}`,
+7.${menu[6][0]}
+0.Exit`,
 
     Featured: `Featured:
 1.${menu[4][2][0]} - Daily Quotes
 2.${menu[1][1][2][0]}
 3.${menu[1][1][3][0]}
-4.${menu[4][1][0]} - Daily Quotes`,
+4.${menu[2][1][0]} - VOA hausa Audio
+5. Hijira Calender`,
 // option 2 is selected from the main menu
     Religion: 
 `Religion:
@@ -119,10 +124,16 @@ Phone: +2347055793353
 Socials: https://twitter.com/0mar_jay`
 }
 // console.log(paths.Featured)
-var pathFinder = 'root'
+var pathFinder = ''
 client.on('message', message => {
-    //Pathing
-    if(pathFinder == 'root') {
+    if(message.body == 'menu' || message.body == 'Menu' || message.body == 'MENU' ) {
+        pathFinder = 'root'
+        return	message.reply(paths.root)
+    }else if (message.body == 'exit' || message.body == 'Exit' || message.body == 'EXIT') {
+            message.reply('You have exited from this service')
+            message.reply(`Remember you can always get back on by Typing the keyword "MENU"`)
+            return pathFinder = ''
+    }else if(pathFinder == 'root') {
         switch(Number(message.body)) {
             case 1:
                 pathFinder= 'Featured'
@@ -148,7 +159,12 @@ client.on('message', message => {
                break;
             case 7:
                 return	message.reply(paths.About)
-               break;           
+               break;  
+            case 0:     
+                        message.reply('You have exited from this service')
+                        message.reply(`Remember you can always get back on by Typing the keyword "MENU"`)
+                return pathFinder = ''
+                break;            
             default:
                 pathFinder= 'root'
                 return	message.reply(paths.root)
@@ -157,7 +173,7 @@ client.on('message', message => {
             switch(Number(message.body)) {
                 case 1:
                     //
-                return randomQuotes().then(msg => message.reply(msg) )       
+                    return randomQuotes().then(msg => message.reply(msg) )       
                 	
                   break;
                 case 2:
@@ -167,8 +183,15 @@ client.on('message', message => {
                     return	message.reply('Launching Pocket Quran')
                    break;
                 case 4:
-                    return	message.reply('Fetching today quotes- Hausa')
-                   break;          
+                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
+                    message.reply('Fetching news from Voice of America.... Please wait...')
+                    return	message.reply(media)
+                   break; 
+                case 5:
+                    return hijiraCalender().then(msg =>{
+                        message.reply(msg)
+                    })
+                   break;            
                 default:
                     pathFinder= 'root'
                     return	message.reply(paths.root)
@@ -189,7 +212,10 @@ client.on('message', message => {
         }else if(pathFinder == 'Islam') {
             switch(Number(message.body)) {
                 case 1:
-                    return	message.reply('Hijira Calender')
+                    hijiraCalender().then(msg =>{
+                        message.reply(msg)
+                    })
+                    
                   break;
                 case 2:
 
@@ -205,16 +231,16 @@ client.on('message', message => {
         }else if(pathFinder == 'News') {
             switch(Number(message.body)) {
                 case 1:
-                    return	message.reply('Getting data from BBC hausa')
-                  break;
-                case 2:
-                    const media = MessageMedia.fromFilePath('./ff.mp3');
+                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
                     message.reply('Fetching news from Voice of America.... Please wait...')
                     return	message.reply(media)
+                  break;
+                case 2:
+                    return	message.reply('coming soon')
                   break;       
                 default:
                     pathFinder= 'root'
-                    return	message.reply(paths.root)
+                    return	message.reply('coming soon')
               }    
         }else if(pathFinder == 'DailyQuotes') {
             switch(Number(message.body)) {
@@ -244,12 +270,4 @@ client.on('message', message => {
 //     // Convert it to json, save it to a file, store it in a database...
 // });
 //Daily  Quotes 
-
-
-  
-
-//newsAudio()
-
-
-
-//client.initialize();
+client.initialize();

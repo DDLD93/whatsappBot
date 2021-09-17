@@ -11,8 +11,12 @@ return fetch("https://api.sunnah.com/v1/hadiths/random", {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
 }}).then(res => res.json())
-.then(data => data.hadith[0].body
-   //text.replace(/[<br/><p><>]/g,'');
-) 
+.then(data => {
+   return hadith = data.hadith[0].body;
+   
 }
+   
+).catch(err => console.log(err)) 
+}
+
 module.exports = {randomHadith}

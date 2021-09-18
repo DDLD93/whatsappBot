@@ -190,7 +190,7 @@ client.on('message', message => {
                     return	message.reply('Launching Pocket Quran')
                    break;
                 case 4:
-                    const media = MessageMedia.fromFilePath('./news/VOA_Hausa.mp3');
+                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
                     message.reply('Fetching news from Voice of America.... Please wait...')
                     return	message.reply(media)
                    break; 
@@ -248,7 +248,7 @@ client.on('message', message => {
         }else if(pathFinder == 'News') {
             switch(Number(message.body)) {
                 case 1:
-                    const media = MessageMedia.fromFilePath('./news/VOA_Hausa.mp3');
+                    const media = MessageMedia.fromFilePath('./news/voa.mp3');
                     message.reply('Fetching news from Voice of America.... Please wait...')
                     return	message.reply(media)
                   break;

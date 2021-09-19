@@ -11,7 +11,7 @@ const fs = require('fs');
 const {Client, MessageMedia} = require('whatsapp-web.js');
 
 
-const SESSION_FILE_PATH = './session.json';
+const SESSION_FILE_PATH = './07055793353.json';
 // Load the session data if it has been previously saved
 let sessionData;
 if(fs.existsSync(SESSION_FILE_PATH)) {

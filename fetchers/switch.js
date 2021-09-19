@@ -11,7 +11,7 @@ const fs = require('fs');
 const {Client, MessageMedia} = require('whatsapp-web.js');
 
 
-const SESSION_FILE_PATH = './07055793353.json';
+const SESSION_FILE_PATH = './session.json';
 // Load the session data if it has been previously saved
 let sessionData;
 if(fs.existsSync(SESSION_FILE_PATH)) {
@@ -27,18 +27,13 @@ const client = new Client({
 const menu = `Reply with an Emoji
 👊. Random Quotes in English
 😍. Random Hadith
-💃. Listen to morning news Hausa
-😛. Listen to evening news Hausa
-😎. Get Todays date Hijra Calender
-😇. Names of Allah`
-
-var nameOfALLAH = false
+😊. Listen to morning news Hausa
+😀. Listen to evening news Hausa
+👌. Get Todays date Hijra Calender
+🤔. Names of Allah`
 
 client.on('message',message => {
     let msg = message.body;
-    
-if(isNaN(msg)) {
-    console.log('am a number')
     switch (msg) {
         // Exit
         case 'Exit' || 'exit' || 'EXIT':
@@ -47,57 +42,46 @@ if(isNaN(msg)) {
             message.reply(menu)
             break;
         // Random English quote    
-        case '👊':
+        case value:
             randomQuotes().then(msg => message.reply(msg))    
             break;
         // Random Hadith generator    
-        case '😍':
+        case value:
             randomHadith().then(hadith => message.reply(hadith)) 
             break;
         // Hausa news audio Shirin safe  
-        case '💃':
-            let media1 = MessageMedia.fromFilePath('./news/voaSafe.mp3');
+        case value:
+            const media = MessageMedia.fromFilePath('./news/voaSafe.mp3');
             message.reply('Fetching news from Voice of America.... Please wait...')
-            return	message.reply(media1)
+            return	message.reply(media)
             break;   
         // Hausa news audion shirin Hantsi     
-        case '😛':
-            let media2 = MessageMedia.fromFilePath('./news/voaHantsi.mp3');
+        case value:
+            const media = MessageMedia.fromFilePath('./news/voaHantsi.mp3');
             message.reply('Fetching news from Voice of America.... Please wait...')
-            return	message.reply(media2)
+            return	message.reply(media)
             break
         // Hijara calender    
-        case "😎":
+        case value:
             return hijiraCalender().then(msg =>{
                     message.reply(msg)})
             break
         // Names of Allah    
-        case '😇':
-            return message.reply('Enter a number between 1 - 99')
+        case value:
+
             break
-        case 'list' ||'List' || 'LIST':
-            message.reply(menu)
+        case value:
+
             break
-        case 'List':
-            message.reply(menu)
-            break
-        case 'LIST':
-            message.reply(menu)
-            break                       
+        case value:
+
+            break                
         default:
            
             break;
     }
-}else{
-    if (msg > 99 || msg < 1) {
-       return message.reply('Enter a number between 1 - 99')
-    }
-    AllahNames(msg).then(res => message.reply(res))
-}
-
 })
 client.on('ready', () => {
     console.log('Client is ready!');
 });
-console.log(menu)
 client.initialize();

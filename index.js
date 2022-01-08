@@ -1,6 +1,8 @@
 const {randomHadith} = require('./fetchers/hadith');
 const {randomQuotes} = require('./fetchers/randomQuotes');
 const {newsAudio} = require('./fetchers/newsAudio')
+const qr = require('./fetchers/pocketQuran')
+
 const {hijiraCalender} = require('./fetchers/hijiraCalender')
 const {AllahNames} = require('./fetchers/namesALLAH')
 var fetch =  require("node-fetch");
@@ -100,4 +102,4 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 console.log(menu)
-client.initialize();
+//client.initialize();
